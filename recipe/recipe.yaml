@@ -43,6 +43,7 @@ requirements:
   build:
     - ${{ compiler("cxx") }}
     - ${{ stdlib("c") }}
+    - ${{ "clang-tools" if osx }}
     - cmake
     - ninja
   host:
