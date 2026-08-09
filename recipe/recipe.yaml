@@ -29,6 +29,8 @@ build:
       then: |
         @echo on
         set "PATH=%SRC_DIR%\build;%PATH%"
+        @REM MSVC constexpr workaround
+        sed -i -E "s/return .*isalnum.*;/return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_' || c == '-';/" "include/mcfp/mcfp.hpp"
         cmake -S . -B build -G Ninja ^
           %CMAKE_ARGS% ^
           -DBUILD_SHARED_LIBS=ON ^
@@ -44,6 +46,7 @@ requirements:
     - ${{ compiler("cxx") }}
     - ${{ stdlib("c") }}
     - ${{ "clang-tools" if osx }}
+    - ${{ "m2-sed" if win }}
     - cmake
     - ninja
   host:
