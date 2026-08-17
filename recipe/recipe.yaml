@@ -27,8 +27,10 @@ build:
       then: |
         @echo on
         set "PATH=%SRC_DIR%\build;%PATH%"
-        sed -i "s/^add_library(mcfp .*$/&\n\nif(BUILD_SHARED_LIBS)\n    target_compile_definitions(mcfp\n        PRIVATE MCFP_BUILDING_LIBRARY\n        PUBLIC MCFP_SHARED_LIBRARY\n    )\nendif()/" CMakeLists.txt
-        sed -i "s/^MCFP_EXPORT class config$/#if defined(MCFP_MODULE_MODE)\n# define MCFP_CONFIG_API\n#elif defined(_WIN32) \&\& defined(MCFP_SHARED_LIBRARY)\n# if defined(MCFP_BUILDING_LIBRARY)\n#  define MCFP_CONFIG_API __declspec(dllexport)\n# else\n#  define MCFP_CONFIG_API __declspec(dllimport)\n# endif\n#else\n# define MCFP_CONFIG_API\n#endif\n\nMCFP_EXPORT class MCFP_CONFIG_API config/" include/mcfp/mcfp.hpp
+        sed -i "s/return s_last_option;/return last_option_storage();/" include/mcfp/mcfp.hpp
+        sed -i "s/s_last_option = name;/last_option_storage() = name;/" include/mcfp/mcfp.hpp
+        sed -i "s/static thread_local std::string s_last_option;/static std::string \&last_option_storage();\n\tstatic thread_local std::string s_last_option;/" include/mcfp/mcfp.hpp
+        sed -i "s/thread_local std::string config::s_last_option;/thread_local std::string config::s_last_option;\n\nstd::string \&config::last_option_storage()\n{\n\treturn s_last_option;\n}/" src/mcfp.cpp
         cmake -S . -B build -G Ninja ^
           %CMAKE_ARGS% ^
           -DBUILD_SHARED_LIBS=ON ^
