@@ -27,10 +27,12 @@ build:
       then: |
         @echo on
         set "PATH=%SRC_DIR%\build;%PATH%"
-        sed -i "s/return s_last_option;/return last_option_storage();/" include/mcfp/mcfp.hpp
-        sed -i "s/s_last_option = name;/last_option_storage() = name;/" include/mcfp/mcfp.hpp
-        sed -i "s/static thread_local std::string s_last_option;/static std::string \&last_option_storage();\n\tstatic thread_local std::string s_last_option;/" include/mcfp/mcfp.hpp
-        sed -i "s/thread_local std::string config::s_last_option;/thread_local std::string config::s_last_option;\n\nstd::string \&config::last_option_storage()\n{\n\treturn s_last_option;\n}/" src/mcfp.cpp
+        sed -i ^
+          -e "/^[[:space:]]*\[\[nodiscard\]\] std::string get_last_option() const$/,/^[[:space:]]*}$/c\    [[nodiscard]] std::string get_last_option() const;" ^
+          -e "s/s_last_option = name;/set_last_option(name);/" ^
+          -e "s/static thread_local std::string s_last_option;/static void set_last_option(std::string_view name);\n\tstatic thread_local std::string s_last_option;/" ^
+          -e "s/thread_local std::string config::s_last_option;/thread_local std::string config::s_last_option;\n\nstd::string config::get_last_option() const\n{\n\treturn s_last_option;\n}\n\nvoid config::set_last_option(std::string_view name)\n{\n\ts_last_option = name;\n}/" ^
+          include/mcfp/mcfp.hpp src/mcfp.cpp
         cmake -S . -B build -G Ninja ^
           %CMAKE_ARGS% ^
           -DBUILD_SHARED_LIBS=ON ^
