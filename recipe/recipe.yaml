@@ -1,5 +1,5 @@
 context:
-  version: "2.1.0"
+  version: "2.1.1"
 
 package:
   name: libmcfp
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://forge.hekkelman.net/maarten/mcfp/archive/v${{ version }}.tar.gz
-  sha256: afa5072a8a838438d88053663446a0977098218d8dc1e729a83042a0040915d3
+  sha256: cf37ff629c03dcdab0132a89b285bb254fc0157b27a04f5fa73180d58a2874e7
 
 build:
   number: 0
