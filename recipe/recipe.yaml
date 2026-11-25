@@ -1,5 +1,5 @@
 context:
-  version: "2.1.1"
+  version: "2.1.2"
 
 package:
   name: libmcfp
@@ -7,10 +7,10 @@ package:
 
 source:
   url: https://forge.hekkelman.net/maarten/mcfp/archive/v${{ version }}.tar.gz
-  sha256: cf37ff629c03dcdab0132a89b285bb254fc0157b27a04f5fa73180d58a2874e7
+  sha256: a47854dd61aee18cc20c1f29a7384a83d0cd121c5b77bfdef8dedf1254b96195
 
 build:
-  number: 1
+  number: 0
   script:
     - if: unix
       then: |
